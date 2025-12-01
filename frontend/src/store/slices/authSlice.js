@@ -3,8 +3,6 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_BASE_URL + '/auth';
 
-// Helper to get token
-const getToken = () => localStorage.getItem('token');
 
 export const login = createAsyncThunk('auth/login', async (userData, thunkAPI) => {
     try {

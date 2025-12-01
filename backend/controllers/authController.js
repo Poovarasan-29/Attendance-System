@@ -11,7 +11,18 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
-    const { name, email, password, role, employeeId, department } = req.body;
+    let { name, email, password, employeeId, department } = req.body;
+
+    // Auto-generate employeeId if not provided
+    if (!employeeId) {
+        const lastUser = await User.findOne({ employeeId: { $regex: /^EMP/ } }).sort({ employeeId: -1 });
+        if (lastUser && lastUser.employeeId) {
+            const lastId = parseInt(lastUser.employeeId.replace('EMP', ''));
+            employeeId = `EMP${String(lastId + 1).padStart(3, '0')}`;
+        } else {
+            employeeId = 'EMP001';
+        }
+    }
 
     const userExists = await User.findOne({ email });
 
@@ -24,7 +35,58 @@ const registerUser = async (req, res) => {
         name,
         email,
         password,
-        role,
+        role: "employee",
+        employeeId,
+        department,
+    });
+
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            employeeId: user.employeeId,
+            department: user.department,
+            token: generateToken(user._id),
+        });
+    } else {
+        res.status(400).json({ message: 'Invalid user data' });
+    }
+};
+
+// @desc    Register a new Manager
+// @route   POST /api/auth/register/manager
+// @access  Public
+const registerManager = async (req, res) => {
+    let { name, email, password, employeeId, department, key } = req.body;
+    if (key !== process.env.MANAGER_REGISTER_KEY) {
+        res.status(400).json({ message: 'Key Not Matched' });
+        return;
+    }
+    // Auto-generate employeeId if not provided
+    if (!employeeId) {
+        const lastUser = await User.findOne({ employeeId: { $regex: /^MGR/ } }).sort({ employeeId: -1 });
+        if (lastUser && lastUser.employeeId) {
+            const lastId = parseInt(lastUser.employeeId.replace('MGR', ''));
+            employeeId = `MGR${String(lastId + 1).padStart(3, '0')}`;
+        } else {
+            employeeId = 'MGR001';
+        }
+    }
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+        res.status(400).json({ message: 'Manager already exists' });
+        return;
+    }
+
+    const user = await User.create({
+        name,
+        email,
+        password,
+        role: "manager",
         employeeId,
         department,
     });
@@ -104,4 +166,4 @@ const getDepartments = async (req, res) => {
     res.json(departments);
 };
 
-module.exports = { registerUser, authUser, getUserProfile, getAllEmployees, getDepartments };
+module.exports = { registerUser, registerManager, authUser, getUserProfile, getAllEmployees, getDepartments };

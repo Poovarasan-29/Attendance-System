@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useGetMyHistoryQuery } from '../store/apiSlice';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, List as ListIcon, Clock } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const AttendanceHistory = () => {
     const { data: attendanceHistory, isLoading } = useGetMyHistoryQuery(undefined, { refetchOnMountOrArgChange: true });
@@ -95,6 +96,7 @@ const AttendanceHistory = () => {
         }
 
         return (
+
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
                 {/* Calendar Header */}
                 <div className="flex justify-between items-center mb-8">
@@ -108,8 +110,8 @@ const AttendanceHistory = () => {
                         onClick={nextMonth}
                         disabled={new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()}
                         className={`p-2 rounded-lg transition-colors ${new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()
-                                ? 'text-slate-600 cursor-not-allowed'
-                                : 'text-white hover:bg-white/10'
+                            ? 'text-slate-600 cursor-not-allowed'
+                            : 'text-white hover:bg-white/10'
                             }`}
                     >
                         <ChevronRight className="w-5 h-5" />
@@ -179,9 +181,9 @@ const AttendanceHistory = () => {
                                 <td className="p-4">{record.totalHours ? record.totalHours.toFixed(2) : '-'}</td>
                                 <td className="p-4">
                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === 'present' ? 'bg-green-500/20 text-green-500' :
-                                            record.status === 'absent' ? 'bg-red-500/20 text-red-500' :
-                                                record.status === 'late' ? 'bg-yellow-500/20 text-yellow-500' :
-                                                    'bg-orange-500/20 text-orange-500'
+                                        record.status === 'absent' ? 'bg-red-500/20 text-red-500' :
+                                            record.status === 'late' ? 'bg-yellow-500/20 text-yellow-500' :
+                                                'bg-orange-500/20 text-orange-500'
                                         }`}>
                                         {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
                                     </span>
@@ -202,37 +204,43 @@ const AttendanceHistory = () => {
     );
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="heading">Attendance History</h1>
+        <>
+            <Helmet>
+                <title>Attendance history</title>
+            </Helmet>
 
-                {/* View Toggle */}
-                <div className="flex bg-white/5 p-1 rounded-lg border border-white/10">
-                    <button
-                        onClick={() => setViewMode('calendar')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'calendar'
+            <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                    <h1 className="heading">Attendance History</h1>
+
+                    {/* View Toggle */}
+                    <div className="flex bg-white/5 p-1 rounded-lg border border-white/10">
+                        <button
+                            onClick={() => setViewMode('calendar')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'calendar'
                                 ? 'bg-purple-600 text-white shadow-lg'
                                 : 'text-slate-400 hover:text-white hover:bg-white/5'
-                            }`}
-                    >
-                        <CalendarIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">Calendar</span>
-                    </button>
-                    <button
-                        onClick={() => setViewMode('list')}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'list'
+                                }`}
+                        >
+                            <CalendarIcon className="w-4 h-4" />
+                            <span className="text-sm font-medium">Calendar</span>
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'list'
                                 ? 'bg-purple-600 text-white shadow-lg'
                                 : 'text-slate-400 hover:text-white hover:bg-white/5'
-                            }`}
-                    >
-                        <ListIcon className="w-4 h-4" />
-                        <span className="text-sm font-medium">List View</span>
-                    </button>
+                                }`}
+                        >
+                            <ListIcon className="w-4 h-4" />
+                            <span className="text-sm font-medium">List View</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {viewMode === 'calendar' ? renderCalendar() : renderListView()}
-        </div>
+                {viewMode === 'calendar' ? renderCalendar() : renderListView()}
+            </div>
+        </>
     );
 };
 
