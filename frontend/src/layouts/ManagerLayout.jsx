@@ -24,7 +24,7 @@ const ManagerLayout = () => {
             <div className="min-h-screen flex flex-col">
                 <nav className="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center border-b border-gray-800">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary to-primary">
+                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-secondary to-primary">
                             AttendanceSys <span className="text-xs text-gray-500 font-normal border border-gray-700 rounded px-2 py-0.5 ml-2">Manager</span>
                         </h1>
                     </div>
