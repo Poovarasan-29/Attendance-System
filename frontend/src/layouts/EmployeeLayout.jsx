@@ -19,7 +19,7 @@ const EmployeeLayout = () => {
         <div className="min-h-screen flex flex-col">
             <nav className="glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-linear-to-r from-primary to-secondary">
                         AttendanceSys
                     </h1>
                 </div>

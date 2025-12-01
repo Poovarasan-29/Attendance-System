@@ -21,7 +21,7 @@ const ManagerDashboard = () => {
         <div>
             <div className="mb-8">
                 <h1 className="heading">
-                    Manager Dashboard <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">{user?.name}</span>
+                    Manager Dashboard <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">{user?.name}</span>
                 </h1>
                 <p className="text-gray-400 -mt-1">Here's your attendance overview for this month.</p>
             </div>
@@ -106,9 +106,9 @@ const ManagerDashboard = () => {
                             <Pie
                                 data={departmentData}
                                 cx="50%"
-                                cy="50%"
-                                innerRadius={80}
-                                outerRadius={120}
+                                cy="40%"
+                                innerRadius={75}
+                                outerRadius={130}
                                 paddingAngle={0}
                                 dataKey="value"
                             >
@@ -120,12 +120,12 @@ const ManagerDashboard = () => {
                                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155',paddingTop:"2px",paddingBottom:"2px", borderRadius: '8px' }}
                                 itemStyle={{ color: '#fff' }}
                             />
-                            <Legend
+                            {/* <Legend
                                 layout="horizontal"
                                 verticalAlign="bottom"
                                 align="center"
                                 wrapperStyle={{ paddingTop: '20px' }}
-                            />
+                            /> */}
                         </PieChart>
                     </ResponsiveContainer>
                 </div>

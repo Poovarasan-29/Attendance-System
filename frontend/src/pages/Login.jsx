@@ -60,7 +60,7 @@ const Login = () => {
                 <Helmet>
                     <title>Loading...</title>
                 </Helmet>
-                <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+                <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-900 via-purple-900 to-slate-900">
                     <div className="flex flex-col items-center gap-4">
                         <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                         <p className="text-white text-lg font-medium">Logging you in...</p>
@@ -75,7 +75,7 @@ const Login = () => {
             <Helmet>
                 <title>Login | Attendance System</title>
             </Helmet>
-            <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+            <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-slate-900 via-purple-900 to-slate-900">
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -96,7 +96,7 @@ const Login = () => {
 
                                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white leading-tight">
                                     Welcome
-                                    <span className="block mt-2 bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
+                                    <span className="block mt-2 bg-linear-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
                                         Back
                                     </span>
                                 </h1>
@@ -123,12 +123,12 @@ const Login = () => {
                             <div className="flex-1 w-full max-w-xl">
                                 <div className="relative group">
                                     {/* Glow effect */}
-                                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 group-hover:opacity-30 blur-xl transition duration-500"></div>
+                                    <div className="absolute -inset-1 bg-linear-to-r from-purple-600 to-pink-600 rounded-3xl opacity-20 group-hover:opacity-30 blur-xl transition duration-500"></div>
 
                                     {/* Form Container */}
                                     <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6 md:p-8">
                                         <div className='flex justify-center'>
-                                            <div className="flex items-center justify-center w-14 h-14 md:w-16 md:h-16 my-4 md:my-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg relative">
+                                            <div className="flex items-center justify-center w-14 h-14 md:w-16 md:h-16 my-4 md:my-6 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg relative">
                                                 <LogIn className="w-6 h-6 md:w-8 md:h-8 text-white absolute" />
                                             </div>
                                         </div>
@@ -189,7 +189,7 @@ const Login = () => {
                                             {/* Submit Button */}
                                             <button
                                                 type="submit"
-                                                className="w-full mt-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-base font-semibold rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-[1.02] transition-all duration-200"
+                                                className="w-full mt-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-base font-semibold rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-[1.02] transition-all duration-200"
                                             >
                                                 Sign In
                                             </button>

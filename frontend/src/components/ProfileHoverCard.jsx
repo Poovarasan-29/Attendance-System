@@ -12,7 +12,7 @@ const ProfileHoverCard = ({ user }) => {
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Profile Icon */}
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold cursor-pointer">
+            <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold cursor-pointer">
                 {user?.name?.charAt(0)}
             </div>
             <span className="text-sm font-medium hidden md:block">{user?.name}</span>
@@ -22,7 +22,7 @@ const ProfileHoverCard = ({ user }) => {
                 <div className="absolute right-0 top-full mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                     {/* Header with Avatar */}
                     <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl">
+                        <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl">
                             {user?.name?.charAt(0)}
                         </div>
                         <div>
@@ -34,7 +34,7 @@ const ProfileHoverCard = ({ user }) => {
                     {/* Details */}
                     <div className="space-y-3">
                         <div className="flex items-start gap-3">
-                            <User className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+                            <User className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-slate-400">Employee ID</p>
                                 <p className="text-sm text-white font-medium">{user?.employeeId || 'N/A'}</p>
@@ -42,7 +42,7 @@ const ProfileHoverCard = ({ user }) => {
                         </div>
 
                         <div className="flex items-start gap-3">
-                            <Mail className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                            <Mail className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-slate-400">Email</p>
                                 <p className="text-sm text-white font-medium break-all">{user?.email}</p>
