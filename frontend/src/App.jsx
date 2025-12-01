@@ -8,38 +8,41 @@ import Reports from './pages/Reports';
 import TeamCalendar from './pages/TeamCalendar';
 import AllEmployees from './pages/AllEmployees';
 import PrivateRoute from './components/PrivateRoute';
+import { HelmetProvider } from 'react-helmet-async';
 import EmployeeLayout from './layouts/EmployeeLayout';
 import ManagerLayout from './layouts/ManagerLayout';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+    <HelmetProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        {/* Employee Routes */}
-        <Route element={<PrivateRoute allowedRoles={['employee']} />}>
-          <Route element={<EmployeeLayout />}>
-            <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
-            <Route path="/my-history" element={<AttendanceHistory />} />
+          {/* Employee Routes */}
+          <Route element={<PrivateRoute allowedRoles={['employee']} />}>
+            <Route element={<EmployeeLayout />}>
+              <Route path="/employee-dashboard" element={<EmployeeDashboard />} />
+              <Route path="/my-history" element={<AttendanceHistory />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* Manager Routes */}
-        <Route element={<PrivateRoute allowedRoles={['manager']} />}>
-          <Route element={<ManagerLayout />}>
-            <Route path="/manager-dashboard" element={<ManagerDashboard />} />
-            <Route path="/team-calendar" element={<TeamCalendar />} />
-            <Route path="/all-employees" element={<AllEmployees />} />
-            <Route path="/reports" element={<Reports />} />
+          {/* Manager Routes */}
+          <Route element={<PrivateRoute allowedRoles={['manager']} />}>
+            <Route element={<ManagerLayout />}>
+              <Route path="/manager-dashboard" element={<ManagerDashboard />} />
+              <Route path="/team-calendar" element={<TeamCalendar />} />
+              <Route path="/all-employees" element={<AllEmployees />} />
+              <Route path="/reports" element={<Reports />} />
+            </Route>
           </Route>
-        </Route>
 
-        {/* Default Redirect */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+          {/* Default Redirect */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </HelmetProvider>
   );
 }
 

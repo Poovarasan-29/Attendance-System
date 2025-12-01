@@ -16,13 +16,12 @@ const checkIn = async (req, res) => {
 
         const checkInTime = new Date();
         const checkInHour = checkInTime.getHours();
+        const checkInMinute = checkInTime.getMinutes();
 
-        // Determine status based on check-in time
-        // Late if after 9 AM (09:00)
+        // All check-ins are marked as 'present' initially
+        // Mark as 'late' if check-in is at or after 9:00 AM
         let status = 'present';
-        if (checkInHour >= 9 && checkInTime.getMinutes() > 0) {
-            status = 'late';
-        } else if (checkInHour > 9) {
+        if (checkInHour > 9 || (checkInHour === 9 && checkInMinute >= 0)) {
             status = 'late';
         }
 
@@ -58,13 +57,43 @@ const checkOut = async (req, res) => {
 
         attendance.checkOutTime = new Date();
 
-        // Calculate total hours
-        const duration = attendance.checkOutTime - attendance.checkInTime;
-        attendance.totalHours = parseFloat((duration / (1000 * 60 * 60)).toFixed(2));
+        // Calculate working hours based on 9 AM - 6 PM window
+        const checkInDate = new Date(attendance.checkInTime);
+        const checkOutDate = new Date(attendance.checkOutTime);
 
-        // Update status to half-day if less than 4 hours
-        if (attendance.totalHours < 4) {
+        // Set the working hours window (9 AM - 6 PM)
+        const workStartTime = new Date(checkInDate);
+        workStartTime.setHours(9, 0, 0, 0);
+
+        const workEndTime = new Date(checkInDate);
+        workEndTime.setHours(18, 0, 0, 0); // 6 PM
+
+        // Calculate effective start and end times
+        const effectiveStart = checkInDate > workStartTime ? checkInDate : workStartTime;
+        const effectiveEnd = checkOutDate < workEndTime ? checkOutDate : workEndTime;
+
+        // Calculate duration in hours
+        let duration = effectiveEnd - effectiveStart;
+        if (duration < 0) duration = 0; // If checked out before work start time
+
+        let totalHours = parseFloat((duration / (1000 * 60 * 60)).toFixed(2));
+
+        // Cap at 9 hours maximum
+        if (totalHours > 9) totalHours = 9;
+
+        // Update status based on total hours worked
+        if (totalHours < 3) {
+            // Less than 3 hours: Mark as absent, don't count hours
+            attendance.status = 'absent';
+            attendance.totalHours = 0;
+        } else if (totalHours < 7) {
+            // 3-7 hours: Mark as half-day
             attendance.status = 'half-day';
+            attendance.totalHours = totalHours;
+        } else {
+            // 7+ hours: Keep current status (present or late)
+            attendance.totalHours = totalHours;
+            // Status remains 'present' or 'late' from check-in
         }
 
         await attendance.save();
@@ -99,12 +128,23 @@ const getMySummary = async (req, res) => {
             date: { $gte: startOfMonth, $lte: endOfMonth }
         });
 
+        // Get last 7 days attendance for Recent Activity
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        const todayDate = today.toISOString().split('T')[0];
+
+        const recentAttendance = await Attendance.find({
+            userId: req.user._id,
+            date: { $gte: sevenDaysAgo.toISOString().split('T')[0], $lte: todayDate }
+        }).sort({ date: -1 });
+
         const summary = {
             present: attendance.filter(a => a.status === 'present').length,
             absent: attendance.filter(a => a.status === 'absent').length,
             late: attendance.filter(a => a.status === 'late').length,
             halfDay: attendance.filter(a => a.status === 'half-day').length,
-            totalHours: parseFloat(attendance.reduce((acc, curr) => acc + (curr.totalHours || 0), 0).toFixed(2))
+            totalHours: parseFloat(attendance.reduce((acc, curr) => acc + (curr.totalHours || 0), 0).toFixed(2)),
+            recentAttendance: recentAttendance
         };
 
         res.json(summary);

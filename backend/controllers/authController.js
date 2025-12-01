@@ -7,163 +7,101 @@ const generateToken = (id) => {
     });
 };
 
-// Helper function to generate next sequential employeeId
-const generateNextEmployeeId = async () => {
-    const lastUser = await User.findOne({ employeeId: /^EMP\d+$/ })
-        .sort({ employeeId: -1 })
-        .limit(1);
-
-    if (!lastUser) {
-        return 'EMP001';
-    }
-
-    // Extract the number from the employeeId (e.g., "EMP001" -> 1)
-    const lastNumber = parseInt(lastUser.employeeId.replace('EMP', ''));
-    const nextNumber = lastNumber + 1;
-
-    return `EMP${String(nextNumber).padStart(3, '0')}`;
-};
-
+// @desc    Register a new user
 // @route   POST /api/auth/register
+// @access  Public
 const registerUser = async (req, res) => {
-    try {
-        const { name, email, password, department } = req.body;
+    const { name, email, password, role, employeeId, department } = req.body;
 
-        if (!name || !email || !password || !department) {
-            return res.status(400).json({ message: 'Please provide all required fields' });
-        }
+    const userExists = await User.findOne({ email });
 
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ message: 'User already exists with this email' });
-        }
+    if (userExists) {
+        res.status(400).json({ message: 'User already exists' });
+        return;
+    }
 
-        const employeeId = await generateNextEmployeeId();
-        const user = await User.create({
-            name,
-            email,
-            password,
-            department,
-            employeeId,
-            role: 'employee', 
+    const user = await User.create({
+        name,
+        email,
+        password,
+        role,
+        employeeId,
+        department,
+    });
+
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            employeeId: user.employeeId,
+            department: user.department,
+            token: generateToken(user._id),
         });
-
-        if (user) {
-            res.status(201).json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                employeeId: user.employeeId,
-                department: user.department,
-                token: generateToken(user._id),
-            });
-        } else {
-            res.status(400).json({ message: 'Invalid user data' });
-        }
-    } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ message: 'Server error during registration' });
+    } else {
+        res.status(400).json({ message: 'Invalid user data' });
     }
 };
 
-// @route   POST /api/auth/register/manager
-const registerManager = async (req, res) => {
-    try {
-        const { name, email, password, department } = req.body;
-
-        if (!name || !email || !password || !department) {
-            return res.status(400).json({ message: 'Please provide all required fields' });
-        }
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ message: 'User already exists with this email' });
-        }
-
-        const employeeId = await generateNextEmployeeId();
-
-        const user = await User.create({
-            name,
-            email,
-            password,
-            department,
-            employeeId,
-            role: 'manager', 
-        });
-
-        if (user) {
-            res.status(201).json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                employeeId: user.employeeId,
-                department: user.department,
-                token: generateToken(user._id),
-            });
-        } else {
-            res.status(400).json({ message: 'Invalid user data' });
-        }
-    } catch (error) {
-        console.error('Manager registration error:', error);
-        res.status(500).json({ message: 'Server error during registration' });
-    }
-};
-
+// @desc    Auth user & get token
 // @route   POST /api/auth/login
+// @access  Public
 const authUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Please provide email/employeeId and password' });
-        }
+    const user = await User.findOne({ email });
 
-        let user = await User.findOne({ email });
-        if (!user) {
-            user = await User.findOne({ employeeId: email });
-        }
-
-        if (user && (await user.matchPassword(password))) {
-            res.json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                employeeId: user.employeeId,
-                department: user.department,
-                token: generateToken(user._id),
-            });
-        } else {
-            res.status(401).json({ message: 'Invalid credentials' });
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ message: 'Server error during login' });
+    if (user && (await user.matchPassword(password))) {
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            employeeId: user.employeeId,
+            department: user.department,
+            token: generateToken(user._id),
+        });
+    } else {
+        res.status(401).json({ message: 'Invalid email or password' });
     }
 };
 
+// @desc    Get user profile
 // @route   GET /api/auth/me
+// @access  Private
 const getUserProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id);
 
-        if (user) {
-            res.json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                department: user.department,
-                employeeId: user.employeeId,
-            });
-        } else {
-            res.status(404).json({ message: 'User not found' });
-        }
-    } catch (error) {
-        console.error('Get profile error:', error);
-        res.status(500).json({ message: 'Server error' });
+    if (user) {
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            department: user.department,
+            employeeId: user.employeeId,
+        });
+    } else {
+        res.status(404).json({ message: 'User not found' });
     }
 };
 
-module.exports = { registerUser, registerManager, authUser, getUserProfile };
+// @desc    Get all employees
+// @route   GET /api/users
+// @access  Private/Manager
+const getAllEmployees = async (req, res) => {
+    const employees = await User.find({ role: 'employee' }).select('-password');
+    res.json(employees);
+};
+
+// @desc    Get all departments
+// @route   GET /api/users/departments
+// @access  Private
+const getDepartments = async (req, res) => {
+    const users = await User.find({});
+    const departments = [...new Set(users.map(user => user.department))];
+    res.json(departments);
+};
+
+module.exports = { registerUser, authUser, getUserProfile, getAllEmployees, getDepartments };

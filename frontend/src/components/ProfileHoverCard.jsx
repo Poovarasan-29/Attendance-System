@@ -3,6 +3,7 @@ import { User, Mail } from 'lucide-react';
 
 const ProfileHoverCard = ({ user }) => {
     const [isHovered, setIsHovered] = useState(false);
+    console.log(user);
 
     return (
         <div
@@ -44,7 +45,7 @@ const ProfileHoverCard = ({ user }) => {
                             <Mail className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-slate-400">Email</p>
-                                <p className="text-sm text-white font-medium break-all">{user?.email || 'N/A'}</p>
+                                <p className="text-sm text-white font-medium break-all">{user?.email}</p>
                             </div>
                         </div>
 

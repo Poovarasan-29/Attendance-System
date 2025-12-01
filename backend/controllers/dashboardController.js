@@ -70,6 +70,7 @@ const getManagerStats = async (req, res) => {
             name: a.userId.name,
             employeeId: a.userId.employeeId,
             department: a.userId.department,
+            email: a.userId.email,
             checkInTime: a.checkInTime
         }));
 
@@ -136,7 +137,7 @@ const getManagerStats = async (req, res) => {
                 employeeId: emp.employeeId,
                 department: emp.department,
                 email: emp.email,
-                doj: emp.createdAt 
+                doj: emp.createdAt
             }))
         });
     } catch (error) {
