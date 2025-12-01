@@ -22,7 +22,7 @@ Before you begin, ensure you have met the following requirements:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ujvalujval/Attendance-System
+git clone https://github.com/Poovarasan-29/Attendance-System
 cd Attendance
 ```
 
@@ -53,9 +53,9 @@ You need to set up environment variables for both the backend and frontend.
 Create a `.env` file in the `backend` directory with the following variables:
 
 ```env
-PORT=5000
-MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>?retryWrites=true&w=majority&appName=Cluster0
-JWT_SECRET=your_super_secret_key_here
+PORT=<port_number>
+MONGO_URI=<db_connection_string>
+JWT_SECRET=<your_super_secret_key>
 ```
 
 *   `PORT`: The port on which the backend server will run (default: 5000).
@@ -85,7 +85,8 @@ To create a manager account, you need to use the following API endpoint since th
     "name": "Manager Name",
     "email": "manager@example.com",
     "password": "securepassword",
-    "department": "Engineering"
+    "department": "Engineering",
+    "key": mailto:poovarasan.say@gmail.com [I cann't share this here]
 }
 ```
 
