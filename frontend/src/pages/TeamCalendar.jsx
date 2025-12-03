@@ -95,7 +95,7 @@ const TeamCalendar = () => {
                 </div>
 
                 <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto no-scrollbar">
                         <table className="w-full border-collapse">
                             <thead>
                                 <tr>
@@ -188,6 +188,15 @@ const TeamCalendar = () => {
                     </div>
                 </div>
             </div>
+            <style>{`
+                .no-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+                .no-scrollbar {
+                    -ms-overflow-style: none;  /* IE and Edge */
+                    scrollbar-width: none;  /* Firefox */
+                }
+            `}</style>
         </>
     );
 };
