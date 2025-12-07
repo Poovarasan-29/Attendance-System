@@ -3,7 +3,6 @@ import { User, Mail } from 'lucide-react';
 
 const ProfileHoverCard = ({ user }) => {
     const [isHovered, setIsHovered] = useState(false);
-    console.log(user);
 
     return (
         <div
@@ -19,7 +18,7 @@ const ProfileHoverCard = ({ user }) => {
 
             {/* Hover Card */}
             {isHovered && (
-                <div className="absolute right-0 top-full mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute -right-12 sm:right-0 top-full mt-2 w-64 sm:w-72 bg-slate-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                     {/* Header with Avatar */}
                     <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/10">
                         <div className="w-12 h-12 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl">

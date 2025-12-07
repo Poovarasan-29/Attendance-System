@@ -49,7 +49,7 @@ const AttendanceHistory = () => {
             record.status.charAt(0).toUpperCase() + record.status.slice(1);
 
         return (
-            <div className={`mt-2 px-2 py-1 rounded text-xs font-medium w-fit ${colorClass}`}>
+            <div className={`mt-1 sm:mt-2 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-medium w-fit ${colorClass}`}>
                 {label}
             </div>
         );
@@ -68,7 +68,7 @@ const AttendanceHistory = () => {
 
         // Empty cells for days before the first day of the month
         for (let i = 0; i < firstDay; i++) {
-            days.push(<div key={`empty-${i}`} className="h-32 w-24 bg-white/5 rounded-xl opacity-50"></div>);
+            days.push(<div key={`empty-${i}`} className="h-12 sm:h-24 lg:h-32 w-full bg-white/5 rounded-lg sm:rounded-xl opacity-50"></div>);
         }
 
         // Days of the month
@@ -77,14 +77,26 @@ const AttendanceHistory = () => {
             const record = attendanceHistory?.find(r => r.date.startsWith(dateStr));
 
             days.push(
-                <div key={day} className="h-32 bg-white/5 rounded-xl p-3 border border-white/5 hover:border-white/20 transition-colors relative group">
-                    <span className="text-lg font-medium text-white">{day}</span>
+                <div key={day} className="h-12 sm:h-24 lg:h-32 bg-white/5 rounded-lg sm:rounded-xl p-1 sm:p-3 border border-white/5 hover:border-white/20 transition-colors relative group overflow-hidden flex flex-col items-center sm:items-start">
+                    <span className="text-[10px] sm:text-lg font-medium text-white">{day}</span>
 
                     {record && (
-                        <div className="mt-1">
-                            {getStatusBadge(record)}
+                        <div className="mt-0.5 sm:mt-1 w-full flex flex-col items-center sm:items-start">
+                            {/* Mobile/Tablet Dot */}
+                            <div className={`lg:hidden w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-0.5 ${record.status === 'present' ? 'bg-green-500' :
+                                record.status === 'absent' ? 'bg-red-500' :
+                                    record.status === 'late' ? 'bg-yellow-500' :
+                                        'bg-orange-500'
+                                }`}></div>
+
+                            {/* Desktop Badge */}
+                            <div className="hidden lg:block w-full">
+                                {getStatusBadge(record)}
+                            </div>
+
+                            {/* Hours - Hidden on mobile/tablet to save space */}
                             {record.totalHours > 0 && (
-                                <div className="flex items-center gap-1 mt-2 text-xs text-slate-400">
+                                <div className="hidden lg:flex items-center gap-1 mt-2 text-xs text-slate-400">
                                     <Clock className="w-3 h-3" />
                                     <span>{record.totalHours.toFixed(2)}h</span>
                                 </div>
@@ -97,58 +109,60 @@ const AttendanceHistory = () => {
 
         return (
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
                 {/* Calendar Header */}
-                <div className="flex justify-between items-center mb-8">
-                    <button onClick={prevMonth} className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors">
-                        <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <h2 className="text-xl font-bold text-white">
-                        {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    </h2>
-                    <button
-                        onClick={nextMonth}
-                        disabled={new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()}
-                        className={`p-2 rounded-lg transition-colors ${new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()
-                            ? 'text-slate-600 cursor-not-allowed'
-                            : 'text-white hover:bg-white/10'
-                            }`}
-                    >
-                        <ChevronRight className="w-5 h-5" />
-                    </button>
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 gap-4 sm:gap-0">
+                    <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                        <button onClick={prevMonth} className="p-2 hover:bg-white/10 rounded-lg text-white transition-colors">
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <h2 className="text-lg sm:text-xl font-bold text-white">
+                            {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        </h2>
+                        <button
+                            onClick={nextMonth}
+                            disabled={new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()}
+                            className={`p-2 rounded-lg transition-colors ${new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1) > new Date()
+                                ? 'text-slate-600 cursor-not-allowed'
+                                : 'text-white hover:bg-white/10'
+                                }`}
+                        >
+                            <ChevronRight className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Days Header */}
-                <div className="grid grid-cols-7 gap-4 mb-4">
+                <div className="grid grid-cols-7 gap-1 sm:gap-4 mb-2 sm:mb-4">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                        <div key={day} className="text-center text-slate-400 font-medium">
+                        <div key={day} className="text-center text-slate-400 font-medium text-xs sm:text-base">
                             {day}
                         </div>
                     ))}
                 </div>
 
                 {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-4">
+                <div className="grid grid-cols-7 gap-1 sm:gap-4">
                     {days}
                 </div>
 
                 {/* Legend */}
-                <div className="flex justify-center gap-6 mt-8 pt-6 border-t border-white/10">
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 pt-6 border-t border-white/10">
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                        <span className="text-sm text-slate-300">Present</span>
+                        <span className="text-xs sm:text-sm text-slate-300">Present</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <span className="text-sm text-slate-300">Absent</span>
+                        <span className="text-xs sm:text-sm text-slate-300">Absent</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <span className="text-sm text-slate-300">Late</span>
+                        <span className="text-xs sm:text-sm text-slate-300">Late</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                        <span className="text-sm text-slate-300">Half Day</span>
+                        <span className="text-xs sm:text-sm text-slate-300">Half Day</span>
                     </div>
                 </div>
             </div>
@@ -161,26 +175,26 @@ const AttendanceHistory = () => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-gray-700 text-gray-400">
-                            <th className="p-4 font-medium">Date</th>
-                            <th className="p-4 font-medium">Check In</th>
-                            <th className="p-4 font-medium">Check Out</th>
-                            <th className="p-4 font-medium">Total Hours</th>
-                            <th className="p-4 font-medium">Status</th>
+                            <th className="p-3 sm:p-4 font-medium text-xs sm:text-base whitespace-nowrap">Date</th>
+                            <th className="p-3 sm:p-4 font-medium text-xs sm:text-base whitespace-nowrap">Check In</th>
+                            <th className="p-3 sm:p-4 font-medium text-xs sm:text-base whitespace-nowrap">Check Out</th>
+                            <th className="p-3 sm:p-4 font-medium text-xs sm:text-base whitespace-nowrap">Total Hours</th>
+                            <th className="p-3 sm:p-4 font-medium text-xs sm:text-base whitespace-nowrap">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {attendanceHistory?.map((record) => (
                             <tr key={record._id} className="border-b border-gray-800 hover:bg-white/5 transition-colors">
-                                <td className="p-4">{new Date(record.date).toLocaleDateString("en-GB")}</td>
-                                <td className="p-4">
+                                <td className="p-3 sm:p-4 text-xs sm:text-base whitespace-nowrap">{new Date(record.date).toLocaleDateString("en-GB")}</td>
+                                <td className="p-3 sm:p-4 text-xs sm:text-base whitespace-nowrap">
                                     {record.checkInTime ? new Date(record.checkInTime).toLocaleTimeString() : '-'}
                                 </td>
-                                <td className="p-4">
+                                <td className="p-3 sm:p-4 text-xs sm:text-base whitespace-nowrap">
                                     {record.checkOutTime ? new Date(record.checkOutTime).toLocaleTimeString() : '-'}
                                 </td>
-                                <td className="p-4">{record.totalHours ? record.totalHours.toFixed(2) : '-'}</td>
-                                <td className="p-4">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${record.status === 'present' ? 'bg-green-500/20 text-green-500' :
+                                <td className="p-3 sm:p-4 text-xs sm:text-base whitespace-nowrap">{record.totalHours ? record.totalHours.toFixed(2) : '-'}</td>
+                                <td className="p-3 sm:p-4 whitespace-nowrap">
+                                    <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${record.status === 'present' ? 'bg-green-500/20 text-green-500' :
                                         record.status === 'absent' ? 'bg-red-500/20 text-red-500' :
                                             record.status === 'late' ? 'bg-yellow-500/20 text-yellow-500' :
                                                 'bg-orange-500/20 text-orange-500'
@@ -192,7 +206,7 @@ const AttendanceHistory = () => {
                         ))}
                         {attendanceHistory?.length === 0 && (
                             <tr>
-                                <td colSpan="5" className="p-8 text-center text-gray-500">
+                                <td colSpan="5" className="p-8 text-center text-gray-500 text-sm">
                                     No attendance records found.
                                 </td>
                             </tr>
@@ -210,14 +224,14 @@ const AttendanceHistory = () => {
             </Helmet>
 
             <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                    <h1 className="heading">Attendance History</h1>
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+                    <h1 className="heading text-2xl sm:text-3xl">Attendance History</h1>
 
                     {/* View Toggle */}
-                    <div className="flex bg-white/5 p-1 rounded-lg border border-white/10">
+                    <div className="flex bg-white/5 p-1 rounded-lg border border-white/10 w-full sm:w-auto">
                         <button
                             onClick={() => setViewMode('calendar')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'calendar'
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'calendar'
                                 ? 'bg-purple-600 text-white shadow-lg'
                                 : 'text-slate-400 hover:text-white hover:bg-white/5'
                                 }`}
@@ -227,7 +241,7 @@ const AttendanceHistory = () => {
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'list'
+                            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-all ${viewMode === 'list'
                                 ? 'bg-purple-600 text-white shadow-lg'
                                 : 'text-slate-400 hover:text-white hover:bg-white/5'
                                 }`}

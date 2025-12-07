@@ -71,7 +71,7 @@ const TeamCalendar = () => {
                 <title>Team Calendar</title>
             </Helmet>
             <div className="space-y-6">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-col md:flex-row">
                     <h1 className="text-3xl font-bold text-white">Team Calendar</h1>
 
                     <div className="flex items-center gap-4 bg-white/5 p-2 rounded-xl">
