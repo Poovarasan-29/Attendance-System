@@ -110,9 +110,9 @@ const registerManager = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const authUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { email: identifier, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ $or: [{ email: identifier }, { employeeId: identifier }] });
 
     if (user && (await user.matchPassword(password))) {
         res.json({
@@ -125,7 +125,7 @@ const authUser = async (req, res) => {
             token: generateToken(user._id),
         });
     } else {
-        res.status(401).json({ message: 'Invalid email or password' });
+        res.status(401).json({ message: 'Invalid credentials' });
     }
 };
 

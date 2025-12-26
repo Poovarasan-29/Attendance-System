@@ -39,7 +39,7 @@ const ManagerLayout = () => {
     return (
         <>
             <Helmet>
-                <title>Dashboard {user.name ? `- ${user.name}` : ""} </title>
+                <title>Dashboard {user.name ? ` | ${user.name}` : ""} </title>
             </Helmet>
             <div className="min-h-screen flex flex-col bg-slate-950">
                 <nav className="glass sticky top-0 z-50 border-b border-white/10">
